@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Text, BigInteger
+from sqlalchemy import Text
 from ..db import db
 
 
