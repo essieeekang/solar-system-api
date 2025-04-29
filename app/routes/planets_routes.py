@@ -32,10 +32,13 @@ def get_all_planets():
 
     description_param = request.args.get("description")
     if description_param:
-        query = db.where(Planet.name == description_param)
-        
-    
-    query = db.order_by(Planet.name.desc)
+        query = query.where(Planet.description.ilike(f"%{description_param}%"))
+
+    moons_count_param = request.args.get("moons_count")
+    if moons_count_param:
+        query = query.where(Planet.moons_count == moons_count_param)
+
+    query = query.order_by(Planet.name)
 
     planets = db.session.scalars(query)
     planets_response = []
