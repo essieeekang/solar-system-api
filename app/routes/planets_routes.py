@@ -28,10 +28,16 @@ def create_planet():
 
 @planets_bp.get("")
 def get_all_planets():
+    query = db.select(Planet)
 
-    query = db.select(Planet).order_by(Planet.id)
+    description_param = request.args.get("description")
+    if description_param:
+        query = db.where(Planet.name == description_param)
+        
+    
+    query = db.order_by(Planet.name.desc)
+
     planets = db.session.scalars(query)
-
     planets_response = []
 
     for planet in planets:
@@ -44,6 +50,7 @@ def get_all_planets():
             }
         )
     return planets_response
+
 
 
 @planets_bp.get("/<id>")
