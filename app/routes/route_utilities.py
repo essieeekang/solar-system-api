@@ -2,7 +2,7 @@ from flask import abort, make_response
 from ..db import db
 
 
-def validate_planet(cls, id):
+def validate_model(cls, id):
     try:
         id = int(id)
     except ValueError:
