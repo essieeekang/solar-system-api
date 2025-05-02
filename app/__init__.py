@@ -16,8 +16,8 @@ def create_app(config=None):
 
     db.init_app(app)
     migrate.init_app(app, db)
-    
+
     # Register blueprints
     app.register_blueprint(planets_bp)
-    
+
     return app

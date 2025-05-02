@@ -8,6 +8,7 @@ from app.models.planet import Planet
 
 load_dotenv()
 
+
 @pytest.fixture
 def app():
     test_config = {
@@ -43,3 +44,19 @@ def one_planet(app):
     db.session.add(planet)
     db.session.commit()
     return planet
+
+
+@pytest.fixture
+def two_planets(app):
+    mars = Planet(
+        name="Mars",
+        description="The Red Planet, with a thin atmosphere, polar ice caps, and evidence of past water",
+        moons_count=2
+    )
+    venus = Planet(
+        name="Venus",
+        description="Earth's closest neighbor, a hot and dense planet with a thick, toxic atmosphere.",
+        moons_count=0
+    )
+    db.session.add_all([mars, venus])
+    db.session.commit()

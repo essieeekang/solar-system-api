@@ -13,8 +13,8 @@ def create_planet():
     try:
         new_planet = Planet.from_dict(request_body)
 
-    except KeyError as error:
-        response = {"message": f"Invalid request: missing {error.args[0]}"}
+    except KeyError:
+        response = {"message": "Invalid request: missing data"}
         abort(make_response(response, 400))
 
     db.session.add(new_planet)
