@@ -231,6 +231,15 @@ def test_update_planet(client, one_planet):
     # assert
     assert response.status_code == 204
 
+    # checking if actual database was updated
+    query = db.select(Planet).where(Planet.id == 1)
+    updated_planet = db.session.scalar(query)
+
+    assert updated_planet.id == 1
+    assert updated_planet.name == test_data["name"]
+    assert updated_planet.description == test_data["description"]
+    assert updated_planet.moons_count == test_data["moons_count"]
+
 
 def test_update_nonexisting_planet(client):
     # arrange
@@ -256,6 +265,11 @@ def test_delete_planet(client, one_planet):
     # assert
     assert response.status_code == 204
 
+    # checking if actual database was updated
+    planets = db.session.query(Planet).all()
+
+    assert len(planets) == 0
+
 
 def test_validate_model(one_planet):
     # act
@@ -274,7 +288,7 @@ def test_validate_model_nonexistent_planet(one_planet):
         validate_model(Planet, 3)
 
 
-def test_validate_model_invalid_id(one_planet):
+def test_validate_model_invalid_id(client):
     # act and assert
     with pytest.raises(HTTPException):
         validate_model(Planet, "tatooine")
