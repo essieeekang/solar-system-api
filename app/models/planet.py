@@ -1,6 +1,9 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import ForeignKey
+from typing import Optional
 from ..db import db
+from sqlalchemy import Text
+
 
 
 class Planet(db.Model):
@@ -8,6 +11,9 @@ class Planet(db.Model):
     name: Mapped[str]
     description: Mapped[str] = mapped_column(Text)
     moons_count: Mapped[int]
+    moon_id: Mapped[Optional[int]] = mapped_column(ForeignKey("moon.id"))
+    planets: Mapped[list["Planet"]] = relationship(back_populates="moon")
+    moon: Mapped[Optional["Moon"]] = relationship(back_populates="planets")
 
     def to_dict(self):
         planet_dict = {
@@ -25,5 +31,4 @@ class Planet(db.Model):
             name=planet_data["name"],
             description=planet_data["description"],
             moons_count=planet_data["moons_count"])
-
         return new_planet
