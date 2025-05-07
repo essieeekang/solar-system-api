@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey
-from typing import Optional
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .moon import Moon
 from ..db import db
 from sqlalchemy import Text
-
 
 
 class Planet(db.Model):
@@ -11,16 +11,15 @@ class Planet(db.Model):
     name: Mapped[str]
     description: Mapped[str] = mapped_column(Text)
     moons_count: Mapped[int]
-    moon_id: Mapped[Optional[int]] = mapped_column(ForeignKey("moon.id"))
-    planets: Mapped[list["Planet"]] = relationship(back_populates="moon")
-    moon: Mapped[Optional["Moon"]] = relationship(back_populates="planets")
+    moons: Mapped[list["Moon"]] = relationship(back_populates="planet")
 
     def to_dict(self):
         planet_dict = {
             "id": self.id,
             "name": self.name,
             "description": self.description,
-            "moons_count": self.moons_count
+            "moons_count": self.moons_count,
+            "moons": [moon.name for moon in self.moons]
         }
 
         return planet_dict
