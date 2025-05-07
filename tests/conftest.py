@@ -5,6 +5,7 @@ from flask.signals import request_finished
 from dotenv import load_dotenv
 import os
 from app.models.planet import Planet
+from app.models.moon import Moon
 
 load_dotenv()
 
@@ -55,3 +56,29 @@ def two_planets(app, one_planet):
     )
     db.session.add(venus)
     db.session.commit()
+
+
+@pytest.fixture
+def one_moon(app, one_planet):
+    moon = Moon(
+        name="Phobos",
+        description="Larger of Mars' two moons, heavily cratered and irregularly shaped.",
+        size_km=22,
+        planet_id=one_planet.id
+    )
+    db.session.add(moon)
+    db.session.commit()
+    return moon
+
+
+@pytest.fixture
+def two_moons(app, one_planet, one_moon):
+    deimos = Moon(
+        name="Deimos",
+        description="Smaller of Mars' two moons, with a smooth surface.",
+        size_km=12,
+        planet_id=one_planet.id
+    )
+    db.session.add(deimos)
+    db.session.commit()
+    return deimos

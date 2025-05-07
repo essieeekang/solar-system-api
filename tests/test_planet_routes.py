@@ -1,5 +1,6 @@
 from app.db import db
 from app.models.planet import Planet
+from app.models.moon import Moon
 from app.routes.route_utilities import validate_model
 from werkzeug.exceptions import HTTPException
 import pytest
@@ -195,11 +196,11 @@ def test_to_dict_no_missing_data():
     result = test_data.to_dict()
 
     # assert
-    assert len(result) == 4
     assert result["id"] == 1
     assert result["name"] == "Venus"
     assert result["description"] == "Earth's closest neighbor, a hot and dense planet with a thick, toxic atmosphere"
     assert result["moons_count"] == 0
+    assert "moons" in result
 
 
 def test_to_dict_missing_data():
@@ -210,11 +211,11 @@ def test_to_dict_missing_data():
     result = test_data.to_dict()
 
     # assert
-    assert len(result) == 4
     assert result["id"] == 1
     assert result["moons_count"] == 0
     assert result["description"] is None
     assert result["name"] is None
+    assert "moons" in result
 
 
 def test_update_planet(client, one_planet):
@@ -292,3 +293,5 @@ def test_validate_model_invalid_id(client):
     # act and assert
     with pytest.raises(HTTPException):
         validate_model(Planet, "tatooine")
+
+
